@@ -18,6 +18,7 @@
 #include "wxvbam.h"
 #include "wxutil.h"
 #include "wayland.h"
+#include "background-input.h"
 
 #ifdef __WXMSW__
 #include <windows.h>
@@ -319,7 +320,7 @@ void GameArea::LoadGame(const wxString& name)
     emulating = true;
     was_paused = true;
     MainFrame* mf = wxGetApp().frame;
-    mf->StopPoll();
+    //mf->StopPoll();
     mf->SetJoystick();
     mf->cmd_enable &= ~(CMDEN_GB | CMDEN_GBA);
     mf->cmd_enable |= ONLOAD_CMDEN;
@@ -548,6 +549,8 @@ void GameArea::UnloadGame(bool destruct)
     emusys = NULL;
     soundShutdown();
 
+    disableKeyboardBackgroundInput();
+
     if (destruct)
         return;
 
@@ -570,7 +573,7 @@ void GameArea::UnloadGame(bool destruct)
     mf->enable_menus();
     mf->SetJoystick();
     mf->ResetCheatSearch();
-    mf->StartPoll();
+    //mf->StartPoll();
 
     if (rewind_mem)
         num_rewind_states = 0;
@@ -1057,6 +1060,10 @@ void GameArea::OnIdle(wxIdleEvent& event)
 
         w->SetBackgroundStyle(wxBG_STYLE_CUSTOM);
         w->SetSize(wxSize(basic_width, basic_height));
+
+        // Allow input while on background
+        if (allowBackgroundInput)
+            enableKeyboardBackgroundInput(w);
 
         if (maxScale)
             w->SetMaxSize(wxSize(basic_width * maxScale,
