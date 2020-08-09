@@ -163,20 +163,7 @@ if(WIN32 AND CMAKE_TOOLCHAIN_FILE MATCHES vcpkg AND (X86_32 OR AMD64))
         )
     endif()
 
-    if(NOT EXISTS ${installed_prefix}/bin/wxrc.exe)
-        # Need to copy both the release and debug versions out of the build tree, because
-        # appveyor does not cache the build trees.
-        file(
-            COPY ${build_prefix_rel}/lib/wxrc.exe
-            DESTINATION ${common_prefix}/bin
-        )
-        file(
-            COPY ${build_prefix_dbg}/lib/wxrc.exe
-            DESTINATION ${dbg_prefix}/bin
-        )
-    endif()
-
-    set(WXRC ${installed_prefix}/bin/wxrc.exe)
+    set(WXRC ${common_prefix}/tools/wxwidgets/wxrc.exe)
 
     if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/zip.exe)
         # get zip binary for wxrc
@@ -1039,7 +1026,7 @@ endif()
 if(ENABLE_NLS)
     add_custom_command(
         OUTPUT ${CMAKE_BINARY_DIR}/wx-xrc-strings.h
-        COMMAND ${WXRC} -g ${XRC_SOURCES} -o ${CMAKE_BINARY_DIR}/wx-xrc-strings.h
+        COMMAND ${WXRC} -g xrc/*.xrc -o ${CMAKE_BINARY_DIR}/wx-xrc-strings.h
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         DEPENDS ${XRC_SOURCES}
     )

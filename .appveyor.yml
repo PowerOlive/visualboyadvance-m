@@ -1,7 +1,7 @@
 version: '{build}'
 
 image:
-  - Visual Studio 2017
+  - Visual Studio 2019
 
 build:
   verbosity: detailed
@@ -30,7 +30,7 @@ install:
   - ninja --version
 
 before_build:
-  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" %PLATFORM%
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" %PLATFORM%
 
 build_script:
   - mkdir build
