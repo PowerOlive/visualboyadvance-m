@@ -45,7 +45,7 @@ void wxSDLJoy::CreateAndSendEvent(wxEvtHandler* handler, unsigned short joy, uns
 {
     if (!handler) {
         GameArea *panel = wxGetApp().frame->GetPanel();
-        if (panel) handler = panel->GetEventHandler();
+        if (panel && allowBackgroundInput) handler = panel->GetEventHandler();
         else return;
     }
 
